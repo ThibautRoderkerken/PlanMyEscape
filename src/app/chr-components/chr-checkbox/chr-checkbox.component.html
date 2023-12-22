@@ -1,0 +1,4 @@
+<div>
+    <div *ngIf="checked" (click)="check(false)" [class.info]="type=='info'&&!disabled" [class.bg-green-100]="type=='success'&&!disabled" [class.cursor-pointer]="!disabled" [class.bg-grey-400]="disabled" class="box-border rounded-lg p-3 h-12 text-center border-bottom-accent sm:border-none"><div class="flex justify-center items-center"><mat-icon>check-circle</mat-icon></div></div>
+    <div *ngIf="!checked" (click)="check(true)" [class.cursor-pointer]="!disabled" [class.disabled]="disabled" [class.bg-gray-200]="disabled" [class.bg-red-100]="!disabled" class="box-border p-3 h-12 text-center rounded-lg border-bottom-accent sm:border-none"><div class="flex justify-center items-center"><mat-icon>close</mat-icon></div></div>
+</div>

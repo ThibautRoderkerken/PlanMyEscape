@@ -1,0 +1,48 @@
+<div class="chat-container flex flex-col justify-between h-full">
+    <div #messageBox class="message-box max-h-[90vh] overflow-auto">
+        <div *ngIf="this.chat!=null" class="message-wrapper">
+            <div *ngFor="let message of this.chat?.messages;" [class.owned]="message.owner.id != auth.getId()">
+                <div class="item">
+                    <strong>{{ userService.display(message.owner) }}:</strong> <br> 
+                    {{ message.text }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-row w-full">
+        <app-chr-form #messageForm class="w-full" [disabled]="!chat" [sections]="[
+        {
+            controls: [
+                {
+                    label: 'Envoyer un message',
+                    type: 'textArea',
+                    name: 'text',
+                    width: 'row',
+                    validations:[{rule: 'required'}, {rule: 'maxlength', value: 250}]
+                }
+            ]
+        }
+    ]">
+    </app-chr-form>
+    <app-chr-button
+    class="ml-5 mt-7"
+    [display]="'Envoyer'"
+    [color]="'accent'"
+    [type]="'fixed'"
+    [disabled]="!chat || ! messageForm.valid"
+    [click]="send.bind(null, messageForm.value()['text'])"
+    >
+    </app-chr-button>
+    </div>
+    <!--
+        <section>
+            <textarea
+            [(ngModel)]="input"
+            placeholder="Write something here !"
+            (keyup.enter)="send()"
+            ></textarea>
+        <button (click)="send()" mat-raised-button>Send</button>
+        </section>
+    -->
+  </div>
+  

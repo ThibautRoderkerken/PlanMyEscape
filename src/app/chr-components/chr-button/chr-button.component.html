@@ -1,0 +1,29 @@
+<div class="grid" *ngIf="showCallback ? showCallback() : show">
+  <a
+    mat-button
+    mat-flat-button
+    *ngIf="predicate"
+    [disabled]="disabled"
+    [ngClass]="
+      type == 'full'
+        ? 'grid grid-cols-1 flex-1 self-end content-end items-center justify-center !w-full'
+        : ' '
+    "
+    [ngClass]="type == 'table' ? 'h-14 grid grid-cols-1' : ''"
+    [ngClass]="type == 'fixed' ? 'h-14 grid grid-cols-1 w-36' : ''"
+    color="{{ color }}"
+    (click)="click?.()"
+    [attr.href]="href && href"
+    [attr.target]="target && target"
+  >
+    {{ display }}
+    <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
+  </a>
+</div>
+<!--
+    IF
+    Click
+    color
+    type: table : full  
+    icon
+-->

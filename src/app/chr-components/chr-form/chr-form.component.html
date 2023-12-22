@@ -1,0 +1,113 @@
+<div class="flex flex-col justify-center min-h-5/6">
+  <form [formGroup]="form">
+    <fieldset [disabled]="disabled">
+      <div *ngFor="let section of sections; let index = index">
+        <h2 *ngIf="section.title" class="font-bold text-xl">
+          {{ section.title }}
+        </h2>
+        <div class="grid gap-6 mb-6 sm:grid-cols-2">
+          <div *ngFor="let control of section.controls; let index = index" class="relative"
+            [ngClass]="control.width == 'row' ? 'sm:col-span-2' : 'col-span-1'">
+            <label *ngIf="control.label"
+              class="form-control block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+              control.label
+              }}
+              <span class="text-red-500" *ngIf="isControlRequired(control)">*</span>
+              :
+            </label>
+            <!-- Here we will *ngIf each type of input cause it's the cleanest way I can imagine-->
+            <!--TEXT-->
+            <input class="relative"
+              [ngClass]="(form.controls[control.name].touched && form.controls[control.name].errors) ? 'bg-red-100 dark:bg-red-800':''"
+              *ngIf="control.type == 'text'" type="text" id="{{ control.name }}_{{ index }}" name="{{ control.name }}"
+              [formControlName]="control.name" placeholder="{{ control.placeholder }}" [(ngModel)]="
+                control.value ? control.value : model && model[control.name]
+              "
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+            <!--PASSWORD-->
+            <input class="relative"
+              [ngClass]="(form.controls[control.name].touched && form.controls[control.name].errors) ? 'bg-red-100 dark:bg-red-800':''"
+              *ngIf="control.type == 'password'" type="password" id="{{ control.name }}_{{ index }}"
+              name="{{ control.name }}" [formControlName]="control.name" placeholder="{{ control.placeholder }}"
+              [(ngModel)]="
+                control.value ? control.value : model && model[control.name]
+              "
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+
+            <!--TEXT AREA-->
+            <textarea class="relative"
+              [ngClass]="(form.controls[control.name].touched && form.controls[control.name].errors) ? 'bg-red-100 dark:bg-red-800':''"
+              *ngIf="control.type == 'textArea'" id="{{ control.name }}_{{ index }}" name="{{ control.name }}"
+              [formControlName]="control.name" placeholder="{{ control.placeholder }}" [(ngModel)]="
+                control.value ? control.value : model && model[control.name]
+              "
+              class="h-11 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+            <!--NUMBER-->
+            <input class="relative"
+              [ngClass]="(form.controls[control.name].touched && form.controls[control.name].errors) ? 'bg-red-100 dark:bg-red-800':''"
+              *ngIf="control.type == 'number'" type="number" id="{{ control.name }}_{{ index }}"
+              name="{{ control.name }}" [formControlName]="control.name" placeholder="{{ control.placeholder }}"
+              [(ngModel)]="
+                control.value ? control.value : model && model[control.name]
+              "
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+            <!--DATE-->
+            <input class="relative"
+              [ngClass]="(form.controls[control.name].touched && form.controls[control.name].errors) ? 'bg-red-200 dark:bg-red-800':''"
+              *ngIf="control.type == 'date'" type="date" id="{{ control.name }}_{{ index }}" name="{{ control.name }}"
+              [formControlName]="control.name" placeholder="{{ control.placeholder }}" [ngModel]="
+                control.value
+                  ? (control.value | date : 'yyyy-MM-dd')
+                  : (model && model[control.name] | date : 'yyyy-MM-dd')
+              " (ngModelChange)="
+                control.value
+                  ? (control.value = $event)
+                  : (model[control.name] = $event)
+              "
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+            <!--DATETIME-->
+            <input class="relative"
+            [ngClass]="(form.controls[control.name].touched && form.controls[control.name].errors) ? 'bg-red-200 dark:bg-red-800':''"
+            *ngIf="control.type == 'datetime'" type="datetime-local" id="{{ control.name }}_{{ index }}" name="{{ control.name }}"
+            [formControlName]="control.name" placeholder="{{ control.placeholder }}" [ngModel]="
+              control.value
+                ? (control.value | date : 'yyyy-MM-ddThh:mm:ss')
+                : (model && model[control.name] | date : 'yyyy-MM-ddThh:mm:ss')
+            " (ngModelChange)="
+              control.value
+                ? (control.value = $event)
+                : (model[control.name] = $event)
+            "
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+
+              <!--SearchSelect-->
+            <app-chr-search-select class="relative"
+              [ngClass]="(form.controls[control.name].touched && form.controls[control.name].errors) ? '[&_input]:!bg-red-100 dark:[&_input]:!bg-red-800':''"
+              *ngIf="control.type == 'searchSelect'" id="{{ control.name }}_{{ index }}" [data]="control.data || []"
+              [display]="control.fn!" [placeholder]="control.placeholder" [(model)]="
+                control.value ? control.value : model && model[control.name]
+              " [filters]="control.filters" [formControlName]="control.name"></app-chr-search-select>
+            <span *ngIf="control.icon"
+              [ngClass]="control.iconCallbackDisabled ? 'text-gray-400 dark:text-gray-500':'text-gray-900 dark:text-white'"
+              class="absolute p-2.5 bottom-0 right-0" [matTooltip]="control.iconTooltip || ''"
+              matTooltipPosition="above"
+              (click)="!control.iconCallbackDisabled && control.iconCallback?.(form.controls[control.name].value)"><mat-icon
+                class="flex justify-center align-middle items-center content-center text-lg">{{control.icon}}</mat-icon></span>
+            <div *ngFor="let validation of control.validations" class="h-0">
+              <mat-error *ngIf="
+                  form.controls[control.name].touched &&
+                  form.hasError(validation.rule.toLowerCase(), control.name)
+                ">{{ validation.display }}</mat-error>
+            </div>
+            <span *ngIf="control.span && (!form.controls[control.name].errors || !form.controls[control.name].touched)"
+              class="h-0 text-xs text-gray-600 dark:text-gray-300">{{ control.span
+              }}</span>
+          </div>
+        </div>
+        <div class="py-4" *ngIf="index != sections.length - 1">
+          <hr class="" />
+        </div>
+      </div>
+    </fieldset>
+  </form>
+</div>

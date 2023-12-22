@@ -1,0 +1,11 @@
+<div class="flex flex-row h-full">
+    <div class="w-1/6 h-full max-h-[90vh] overflow-auto">
+        <div *ngFor="let chat of chats; index as i;" (click)="select(chat)" 
+            class="cursor-pointer text-xl font-bold min-h-24 overflow-auto border-y-2 border-gray-900 dark:border-white">
+            {{chat.displayName}}
+        </div>
+    </div>
+    <app-chat-details [chat]="chat" class="w-full h-full">
+        
+    </app-chat-details>
+</div>

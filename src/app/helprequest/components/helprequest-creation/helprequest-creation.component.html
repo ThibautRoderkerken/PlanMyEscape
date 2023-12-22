@@ -1,0 +1,67 @@
+<div class="flex flex-col justify-center min-h-5/6 pt-10">
+    <div class="text-xl pb-10 flex flex-row justify-between">
+      <app-breadcrumb class="w-full" [crumbs]="[
+          { display: 'Dashboard', link: '/' },
+          { display: 'Support', callback: goBack },
+          { display: 'Création' }
+        ]"></app-breadcrumb>
+    </div>
+    <div class="py-4">
+      <hr class="" />
+    </div>
+    <app-chr-form #form [(model)]="request" [(valid)]="valid" (validChange)="formButton.setDisabled(!$event)" [sections]="[
+          {
+            controls: [
+            {
+                label: 'Email',
+                type: 'text',
+                name: 'email',
+                validations: [{ rule: 'required' }, { rule: 'email'}]
+              },
+            ]
+          },
+          {
+            controls: [
+              {
+                label: 'Nom',
+                type: 'text',
+                name: 'firstname',
+                validations: [{ rule: 'required' }, {rule: 'maxlength', value:50}]
+              },
+              {
+                label: 'Prénom',
+                type: 'text',
+                name: 'lastname',
+                validations: [{ rule: 'required' }, {rule: 'maxlength', value:50}]
+              },
+            ]
+          },
+          {
+            controls: [
+            {
+                label: 'Sujet',
+                type: 'text',
+                name: 'object',
+                validations: [{ rule: 'required' }, {rule: 'maxlength', value:100}]
+              },              {
+                label: 'Contenu',
+                type: 'textArea',
+                name: 'body',
+                width: 'row',
+                validations: [{ rule: 'required' }, { rule :'maxlength', value: 500}]
+              },
+            ]
+          }
+        ]">
+    </app-chr-form>
+    <div class="py-4">
+      <hr class="" />
+    </div>
+    <div class="flex flex-row-reverse justify-between">
+      <div class="flex flex-row-reverse mb-6">
+        <app-chr-button #formButton [disabled]="!form.valid" display="Valider" type="fixed" color="accent"
+          [click]="post"></app-chr-button>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,185 @@
+<div class="flex flex-col justify-center min-h-5/6 pt-10">
+  <div class="text-xl flex flex-row justify-between">
+    <app-breadcrumb class="w-full" [crumbs]="[
+        { display: 'Dashboard', link: '/' },
+        { display: 'Vacances', callback: goBack },
+        { display: 'Création' }
+      ]"></app-breadcrumb>
+    <app-chr-button class="w-48" 
+    display="Calendrier (.ics)" 
+    color="accent"
+    [click]="downloadCalendar" 
+    >
+    </app-chr-button>
+  </div>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <div class="flex flex-row justify-between font-bold text-2xl">
+    <div class="w-full">
+      <a *ngIf="holiday.isPublished" [ngClass]="{ 'cursor-pointer': !is_locked }"
+        class="w-full h-6 flex text-center content-center align-middle items-center justify-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Publiée</a>
+      <a *ngIf="!holiday.isPublished" [ngClass]="{ 'cursor-pointer': !is_locked }"
+        class="w-full h-6 flex text-center content-center align-middle items-center justify-center bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">En préparation</a>
+    </div>
+</div>
+<div class="py-4">
+  <hr class="" />
+</div>
+  <div class="font-bold text-2xl">
+    <h2>Météo:</h2>
+  </div>
+  <div *ngIf="weatherInfo != null" class="w-full" class="shadow-xl rounded-lg flex flex-row justify-between">
+    <div class="p-4 flex flex-col justify-center items-center">
+      <p>Aujourd'hui - {{weatherInfo.current.temp_c}}°</p>
+      <img class="w-24 h-24" src="{{weatherInfo.current.condition.icon}}" />
+      <p></p>
+    </div>
+    <div class="p-4 flex flex-col justify-center items-center"  *ngFor="let info of weatherInfo.forecast.forecastday; index as i">
+      <p *ngIf="i == 0">Demain - {{info.day.avgtemp_c}}°</p>
+      <p *ngIf="i > 0">{{info.date | date:'cccc dd/MM' | titlecase}} - {{info.day.avgtemp_c}}°</p>
+      <img class="w-24 h-24" src="{{info.day.condition.icon}}" />
+    </div>
+  </div>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <app-chr-form #form [disabled]="is_locked" [(model)]="holiday" [sections]="[
+        {
+          controls: [
+          {
+              label: 'Nom',
+              type: 'text',
+              name: 'name',
+              validations: [{ rule: 'required' }, {rule :'maxlength', value: 100}]
+            },
+            {
+              label: 'Pays',
+              type: 'searchSelect',
+              name: 'country',
+              data: country,
+              fn: service.countryDisplay,
+              validations: [{ rule: 'required' }, {rule: 'type', value: 'object'}]
+            },
+            {
+              label: 'Ville',
+              type: 'text',
+              name: 'city',
+              validations: [{ rule: 'required' }, {rule :'maxlength', value: 100}]
+            },
+            {
+              label: 'Addresse du séjour',
+              type: 'text',
+              name: 'address',
+              validations: [{ rule: 'required' }, {rule :'maxlength', value: 100}]
+            },
+            {
+              label: 'Début',
+              type: 'date',
+              name: 'startAt',
+              validations: [{ rule: 'required' },]
+            },
+            {
+              label: 'Fin',
+              type: 'date',
+              name: 'endAt',
+              validations: [{ rule: 'required' }]
+            },
+          ]
+        },
+      ]">
+  </app-chr-form>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <div class="flex flex-row justify-between align-middle items-center pb-4">
+    <div class="font-bold text-2xl">
+      <h2>Activités:</h2>
+    </div>
+    <app-chr-button mat-button mat-flat-button color="accent" 
+    display="Ajouter une activité"
+    [disabled]="is_locked" 
+    [click]="createDialog" 
+    [showCallback]="service.isUserOwner.bind(null, holiday)">
+    </app-chr-button>
+  </div>
+
+  <app-chr-table *ngIf="holiday?.activities" [columns]="[
+      { display: 'Nom', properties: ['name'] },
+      { display: 'Description', properties: ['description'] },
+      { display: 'Destination', properties: ['destination'] },
+      { display: 'Début', properties: ['startAt'], date: 'dd/MM/yyyy - H:mm' },
+      { display: 'Fin', properties: ['endAt'], date: 'dd/MM/yyyy - H:mm' },
+    ]" [actions]="[
+      { display: 'Modifier', color: 'accent', callback: updateDialog, disabled: is_locked, showCallback: service.isUserOwner.bind(null, holiday)},
+      { display: 'Supprimer', color: 'warn', callback: removeActivity, disabled: is_locked, showCallback: service.isUserOwner.bind(null, holiday)}
+    ]" [data]="holiday.activities"></app-chr-table>
+
+  <div class="flex flex-row justify-between align-middle items-center pb-4">
+    <div class="font-bold text-2xl">
+      <h2>Participants:</h2>
+    </div>
+  </div>
+
+  <div *ngIf="holiday?.owner?.id == auth.getId()" class="flex flex-row">
+    <app-chr-form class="w-full mr-5" #userForm [disabled]="is_locked" [sections]="[
+      { controls: [
+        {
+          label: 'Participant',
+          name:'user', 
+          span: 'Chercher le participant par son nom. Si vous ne le trouvez pas dans la liste, alors entrez son adresse email pour lui envoyer une invitation à rejoindre la plateforme.',
+          width:'row',
+          placeholder: 'Chercher un utilisateur', 
+          type: 'searchSelect', 
+          data: users,
+          fn: userService.displayEmail,
+          validations: [{ rule: 'required' }]
+        }
+      ]}
+      ]">
+    </app-chr-form>
+    <app-chr-button 
+      class="mt-7 w-64"
+      [display]="'Ajouter un participant'" 
+      [disabled]="is_locked || !userForm.valid"
+      [click]="addUser.bind(null, userForm.value()['user'])" 
+      [color]="'accent'" 
+      [type]="'full'">
+    </app-chr-button>
+  </div>
+
+  <app-chr-table *ngIf="holiday?.users" [columns]="
+    [
+      { display: 'Nom', properties: ['firstname']},
+      { display: 'Prénom', properties: ['lastname']},
+      { display: 'Email', properties: ['email']},
+    ]" 
+  [data]="holiday.users"
+  [actions]="
+    [
+      { display: 'Supprimer', color: 'warn', callback: removeUser, disabled: is_locked, showCallback: service.isUserOwner.bind(null, holiday)}
+    ]"
+  >
+  </app-chr-table>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <div *ngIf="auth.hasPrivilege('HOLIDAY_UPDATE') || holiday.owner?.id == auth.getId()" class="flex flex-row-reverse justify-between">
+    <div class="flex flex-row" *ngIf="!is_locked && auth.hasPrivilege('HOLIDAY_UPDATE')">
+      <app-chr-button class="mr-5" [disabled]="!form.valid"
+        [display]="'Valider'" [click]="put" [color]="'accent'" [type]="'fixed'">
+      </app-chr-button>
+      <app-chr-button [disabled]="!form.valid"
+        [matTooltip]="'Attention: cette action est irréversible !'" matTooltipPosition="above"
+        [display]="'Publier'" [click]="openConfirmDialog" [color]="'primary'" [type]="'fixed'">
+      </app-chr-button>
+    </div>
+    <app-chr-button *ngIf="is_locked && (!holiday?.isPublished || auth.hasRole('ADMIN'))" [display]="'Modifier'" [click]="toggleLock" [color]="'accent'" [type]="'fixed'">
+    </app-chr-button>
+    <app-chr-button *ngIf="!is_locked" [display]="'Annuler'" [click]="toggleLock" [color]="'warn'" [type]="'fixed'">
+    </app-chr-button>
+    <app-chr-button *ngIf="is_locked && ((auth.hasPrivilege('HOLIDAY_DELETE') && holiday.owner?.id == auth.getId()) || auth.hasRole('ADMIN')) " display="Supprimer" color="warn"
+      [matTooltip]="'Attention: cette action est irréversible !'" matTooltipPosition="above"
+      [click]="openDeleteDialog"></app-chr-button>
+  </div>
+</div>

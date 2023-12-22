@@ -1,0 +1,106 @@
+<div *ngIf="user" class="flex flex-col justify-center min-h-5/6 pt-5">
+  <div class="text-xl pb-10">
+    <app-breadcrumb class="w-fit" [crumbs]="[
+        { display: 'Dashboard', link: '/' },
+        { display: 'Utilisateurs', link: 'user' },
+        { display: 'Détails' }
+      ]"></app-breadcrumb>
+  </div>
+  <div class="flex flex-row justify-between font-bold text-2xl pb-10">
+    <div [ngClass]="
+        user.hasRole('ADM') ? 'text-red-400' : 'text-black dark:text-gray-400'
+      " class="flex flex-col justify-between">
+      <p>{{ user.username }}</p>
+      <p>{{ user.firstname }} | {{ user.lastname }}</p>
+    </div>
+    <div>
+      <a (click)="toggleActive()" *ngIf="user.isActive" [ngClass]="{ 'cursor-pointer': !is_locked }"
+        class="w-24 h-6 flex text-center content-center align-middle items-center justify-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Actif</a>
+      <a (click)="toggleActive()" *ngIf="!user.isActive" [ngClass]="{ 'cursor-pointer': !is_locked }"
+        class="w-24 h-6 flex text-center content-center align-middle items-center justify-center bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactif</a>
+    </div>
+  </div>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <app-chr-form #form [disabled]="is_locked" [(model)]="user" [sections]="[
+      {
+        controls: [
+          {
+            label: 'Nom',
+            name: 'firstname',
+            type: 'text',
+            validations: [{ rule: 'required' }, {rule: 'maxlength', value:100}]
+          },
+          {
+            label: 'Prénom',
+            name: 'lastname',
+            type: 'text',
+            validations: [{ rule: 'required' }, {rule: 'maxlength', value:100}]
+          },
+          {
+            label: 'Email',
+            name: 'email',
+            type: 'text',
+            validations: [{ rule: 'required' }, { rule: 'email' }]
+          }
+        ]
+      }
+    ]"></app-chr-form>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <div *ngIf="user.roles" class="max-w-full overflow-auto">
+    <div class="grid gap-6 mb-6 md:grid-cols-5">
+      <div class="font-bold text-2xl">
+        <h2>Roles:</h2>
+      </div>
+    </div>
+    <div *ngIf="!is_locked" class="flex flex-row items-center justify-center align-middle col-span-4 pb-4">
+      <div class="mr-4 h-10 w-full">
+        <input type="text" matInput [formControl]="searchRoleSelect"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Chercher un rôle" [matAutocomplete]="auto" />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="getRoleName.bind(this)">
+          <mat-option *ngFor="let role of filteredRoleOptions | async" [value]="role.id">
+            {{ role.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <app-chr-button [display]="'Ajouter'" [click]="addRole" [color]="'accent'" [type]="'fixed'">
+      </app-chr-button>
+    </div>
+    <div class="h-96">
+      <app-chr-table [data]="user.roles" [columns]="[
+        { display: 'Nom', properties: ['name'] },
+        {
+          display: 'Privilèges',
+          properties: ['privileges'],
+          callback: roleService.privilegesDisplay
+        }
+      ]" [actions]="[
+        {
+          display: 'Supprimer',
+          color: 'warn',
+          callback: removeRole,
+          disabled: is_locked
+        }
+      ]"></app-chr-table>
+    </div>
+  </div>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <div *ngIf="auth.hasPrivilege('USER_UPDATE')" class="flex flex-row-reverse justify-between">
+    <app-chr-button *ngIf="!is_locked && auth.hasPrivilege('USER_UPDATE')" [disabled]="!form.valid"
+      [display]="'Valider'" [click]="put" [color]="'primary'" [type]="'fixed'">
+    </app-chr-button>
+    <app-chr-button *ngIf="is_locked" [display]="'Modifier'" [click]="toggleLock" [color]="'accent'" [type]="'fixed'">
+    </app-chr-button>
+    <app-chr-button *ngIf="!is_locked" [display]="'Annuler'" [click]="toggleLock" [color]="'warn'" [type]="'fixed'">
+    </app-chr-button>
+    <app-chr-button *ngIf="is_locked && auth.hasPrivilege('USER_DELETE')" display="Supprimer" color="warn"
+      [matTooltip]="'Attention: cette action est irréversible !'" matTooltipPosition="above"
+      [click]="openDeleteDialog"></app-chr-button>
+  </div>
+</div>

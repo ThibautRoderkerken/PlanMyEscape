@@ -1,0 +1,9 @@
+<div class="relative w-full cursor-pointer flex flex-row justify-between align-middle self-center"
+  (click)="orderBy(column)" id="chr_th_cell_{{ column }}">
+  <p>{{ display }}</p>
+  <div *ngIf="sortBy" class="absolute right-3 top-0 h-0 w-0">
+    <mat-icon *ngIf="sortBy == column && isAsc">arrow_upward</mat-icon>
+    <mat-icon *ngIf="sortBy == column && !isAsc">arrow_downward</mat-icon>
+  </div>
+</div>
+<ng-content></ng-content>

@@ -1,0 +1,57 @@
+<div class="grid grid-cols-2 gap-6 justify-between pt-5 items-center content-center align-middle">
+  <div>
+    <div>
+      <label>Filtrer par statut: </label>
+      <div class="flex flex-row items-center content-center align-middle">
+        <select matInput [formControl]="filterBy" (change)="checkNotNull($event)"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option [value]="null" selected>---</option>
+          <option [value]="true">Actif</option>
+          <option [value]="false">Inactif</option>
+        </select>
+        <button (click)="resetFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <label>Chercher: </label>
+    <input matInput [formControl]="searchBy" name="search" placeholder="Rechercher" type="text" id="search"
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+  </div>
+</div>
+<div class="w-full flex flex-row mt-4">
+  <div
+    class="inline-block whitespace-nowrap rounded-[0.27rem] bg-primary-100 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold leading-none">
+    Total: {{ dataSource.data.length }}
+  </div>
+  <div
+    class="inline-block whitespace-nowrap rounded-[0.27rem] bg-success-100 px-[0.65em] pt-[0.35em] pb-[0.25em] text-center align-baseline text-[0.75em] font-bold leading-none text-green-700">
+    Actifs: {{ getType().active }}
+  </div>
+</div>
+<div class="sm:h-[85%]">
+  <app-chr-table [(isAsc)]="isAsc" [(sortBy)]="sortBy" [data]="
+      dataSource.data
+        | filter : filterBy.value! : ['isActive']
+        | sort : isAsc : sortBy
+        | search : searchBy.value!
+    " [columns]="[
+      {
+        display: 'ID',
+        properties: ['id'],
+        chipsTarget: ['isActive'],
+        chipsDisplay: ['Actif', 'Inactif']
+      },
+      { display: 'Email', properties: ['email'] },
+      { display: 'Nom', properties: ['firstname'] },
+      { display: 'Prénom', properties: ['lastname'] }
+    ]" [actions]="[
+      {
+        display: 'Détails',
+        callback: router.navigateToUserDetails,
+        color: 'accent'
+      }
+    ]"></app-chr-table>
+</div>

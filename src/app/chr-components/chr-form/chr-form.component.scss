@@ -1,0 +1,37 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@import '../../../styles.scss';
+
+$color-config: mat.get-color-config($chr-theme);
+$primary-palette: map.get($color-config, 'primary');
+$accent-palette: map.get($color-config, 'accent');
+
+table {
+    width: 100%;
+}
+
+.mat-column-actions {
+    text-align: right;
+}
+
+.mat-mdc-header-row {
+    background-color: mat.get-color-from-palette($accent-palette, A200);
+}
+
+::ng-deep .arrow-color .mat-sort-header-arrow {
+    color: black;
+}
+
+.bg-primary {
+    background-color: mat.get-color-from-palette($primary-palette);
+}
+
+.bg-accent {
+    background-color: mat.get-color-from-palette($accent-palette, A200);
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}

@@ -1,0 +1,19 @@
+<div *ngIf="predicate" class="w-full dark:bg-slate-600 rounded-lg relative">
+  <div class="w-full relative">
+    <input #input type="text" matInput [formControl]="searchSelect" [(ngModel)]="model"
+      class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      placeholder="{{ placeholder }}" required (keyup)="keyup.emit($event)" [matAutocomplete]="auto" />
+    <span *ngIf="filters" [matTooltip]="filters[filterIndex].tooltip || ''" matTooltipPosition="above"
+      class="absolute cursor-pointer top-[1px] right-[1.5px] h-[calc(100%_-_2px)] text-gray-900 dark:text-gray-400 px-1 border-l border-gray-300 rounded-r-md text-end opacity-100 bg-gray-50 dark:bg-gray-700 flex justify-center align-middle items-center"
+      (click)="filters ? increment() : void">{{ filters[filterIndex].display }}
+    </span>
+  </div>
+
+  <mat-autocomplete class="dark:!bg-slate-600 dark:!text-white rounded-lg" #auto="matAutocomplete" id="auto"
+    [displayWith]="getModelDisplay.bind(this)" (optionSelected)="emit($event.option.value)">
+    <mat-option class="dark:!bg-slate-600 dark:!text-gray-400 rounded-lg"
+      *ngFor="let model of filteredModelOptions | async" [value]="model" selected>
+      {{ getModelDisplay(model) }}
+    </mat-option>
+  </mat-autocomplete>
+</div>

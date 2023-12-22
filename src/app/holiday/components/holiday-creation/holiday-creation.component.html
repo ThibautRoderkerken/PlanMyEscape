@@ -1,0 +1,133 @@
+<div class="flex flex-col justify-center min-h-5/6 pt-10">
+  <div class="text-xl pb-10 flex flex-row justify-between">
+    <app-breadcrumb class="w-full" [crumbs]="[
+        { display: 'Dashboard', link: '/' },
+        { display: 'Vacances', callback: goBack },
+        { display: 'Création' }
+      ]"></app-breadcrumb>
+  </div>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <app-chr-form #form [(model)]="holiday" [(valid)]="valid" (validChange)="formButton.setDisabled(!$event)" [sections]="[
+        {
+          controls: [
+            {
+              label: 'Nom',
+              type: 'text',
+              name: 'name',
+              validations: [{ rule: 'required' }, {rule :'maxlength', value: 100}]
+            },
+            {
+              label: 'Pays',
+              type: 'searchSelect',
+              name: 'country',
+              data: country,
+              fn: service.countryDisplay,
+              validations: [{ rule: 'required' }, {rule: 'type', value: 'object'}]
+            },
+            {
+              label: 'Ville',
+              type: 'text',
+              name: 'city',
+              validations: [{ rule: 'required' }, {rule :'maxlength', value: 100}]
+            },
+            {
+              label: 'Addresse du séjour',
+              type: 'text',
+              name: 'address',
+              validations: [{ rule: 'required' }, {rule :'maxlength', value: 100}]
+            },
+            {
+              label: 'Début',
+              type: 'date',
+              name: 'startAt',
+              validations: [{rule:'required'}]
+            },
+            {
+              label: 'Fin',
+              type: 'date',
+              name: 'endAt',
+              validations: [{rule:'required'}]
+            },
+          ]
+        },
+      ]">
+  </app-chr-form>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <div class="flex flex-row justify-between align-middle items-center pb-4">
+    <div class="font-bold text-2xl">
+      <h2>Activités:</h2>
+    </div>
+    <a mat-button mat-flat-button color="accent" (click)="createDialog()">Ajouter une activité</a>
+  </div>
+
+  <app-chr-table [columns]="[
+      { display: 'Nom', properties: ['name'] },
+      { display: 'Description', properties: ['description'] },
+      { display: 'Destination', properties: ['destination'] },
+      { display: 'Début', properties: ['startAt'], date: 'dd/MM/yyyy - H:mm' },
+      { display: 'Fin', properties: ['endAt'], date: 'dd/MM/yyyy - H:mm' },
+    ]" [actions]="[
+      { display: 'Modifier', color: 'accent', callback: updateDialog},
+      { display: 'Supprimer', color: 'warn', callback: removeActivity }
+    ]" [data]="holiday.activities"></app-chr-table>
+
+<div class="flex flex-row justify-between align-middle items-center pb-4">
+  <div class="font-bold text-2xl">
+    <h2>Participants:</h2>
+  </div>
+</div>
+
+<div class="flex flex-row">
+  <app-chr-form class="w-full mr-5" #userForm [sections]="[
+    { controls: [
+      {
+        label: 'Participant',
+        name:'user', 
+        span: 'Chercher le participant par son nom. Si vous ne le trouvez pas dans la liste, alors entrez son adresse email pour lui envoyer une invitation à rejoindre la plateforme.',
+        width:'row',
+        placeholder: 'Chercher un utilisateur', 
+        type: 'searchSelect', 
+        data: users,
+        fn: userService.displayEmail,
+        validations: [{ rule: 'required' }]
+      }
+    ]}
+    ]">
+  </app-chr-form>
+  <app-chr-button 
+    class="mt-7 w-64"
+    [display]="'Ajouter un participant'" 
+    [disabled]="!userForm.valid"
+    [click]="addUser.bind(null, userForm.value()['user'])" 
+    [color]="'accent'" 
+    [type]="'full'">
+  </app-chr-button>
+  </div>
+
+  <app-chr-table [columns]="
+  [
+    { display: 'Nom', properties: ['firstname']},
+    { display: 'Prénom', properties: ['lastname']},
+    { display: 'Email', properties: ['email']},
+  ]" 
+  [data]="holiday.users"
+  [actions]="
+  [
+    { display: 'Supprimer', color: 'warn', callback: removeUser}
+  ]"
+  >
+  </app-chr-table>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <div class="flex flex-row-reverse justify-between">
+    <div class="flex flex-row-reverse mb-6">
+      <app-chr-button #formButton [disabled]="!form.valid" display="Valider" type="fixed" color="accent"
+        [click]="post"></app-chr-button>
+    </div>
+  </div>
+</div>

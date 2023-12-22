@@ -1,0 +1,53 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@import '../../../styles.scss';
+
+$color-config: mat.get-color-config($chr-theme);
+$primary-palette: map.get($color-config, 'primary');
+$accent-palette: map.get($color-config, 'accent');
+
+.text-primary {
+   color: mat.get-color-from-palette($primary-palette);
+}
+
+thead {
+   background-color: mat.get-color-from-palette($accent-palette, A200);
+}
+
+::ng-deep tbody tr td{
+   padding: theme('padding.3');
+   height: theme('height.14');
+}
+
+::ng-deep .cell {
+      padding: theme('padding.3');
+      height: theme('height.14');
+}
+
+@media (min-width: 640px) {
+   table {
+      display: inline-table !important;
+   }
+
+   thead tr:not(:first-child) {
+      display: none;
+   }
+
+   .border-primary {
+      border-width: 2px;
+      --tw-border-opacity: 1;
+      border-color: mat.get-color-from-palette($accent-palette, A200);
+   }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+   display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+   -ms-overflow-style: none;
+   /* IE and Edge */
+   scrollbar-width: none;
+   /* Firefox */
+}

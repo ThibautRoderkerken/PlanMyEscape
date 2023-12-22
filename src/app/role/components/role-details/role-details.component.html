@@ -1,0 +1,75 @@
+<div class="text-xl pb-10 pt-5">
+  <app-breadcrumb class="w-fit" [crumbs]="[
+      { display: 'Paramètres', link: 'settings' },
+      { display: 'Roles', link: 'settings' },
+      { display: 'Détails' }
+    ]"></app-breadcrumb>
+</div>
+<div class="py-4">
+  <hr class="" />
+</div>
+<div *ngIf="role" (ngSubmit)="put()">
+  <div class="grid gap-6 mb-6 md:grid-cols-2">
+    <div>
+      <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
+      <input disabled name="name" [(ngModel)]="role.name" type="text" id="name"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+    </div>
+    <div>
+      <label for="level" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Niveau d'accès</label>
+      <input [disabled]="is_locked" name="level" [(ngModel)]="role.authorityLevel" type="text" id="level"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+    </div>
+  </div>
+</div>
+<div class="py-4">
+  <hr class="" />
+</div>
+<div *ngIf="role?.privileges" class="max-w-full overflow-auto">
+  <div class="flex flex-col mb-6">
+    <div class="font-bold text-xl pb-4">
+      <h2>Privilèges:</h2>
+    </div>
+
+    <div *ngIf="!is_locked" class="flex flex-row items-center justify-center align-middle col-span-4">
+      <app-chr-search-select #select [(model)]="privilege" class="mr-4 h-10 w-full" [display]="privilegeService.display"
+        [data]="privileges" [filters]="[
+          {
+            display: 'Nvx.',
+            tooltip: 'N\'afficher que les nouveaux privilèges',
+            callback: roleService.hasNotPrivilege.bind(null, role)
+          },
+          { display: 'Tout', tooltip: 'Afficher tous les privilègres' }
+        ]" (keyup.enter)="addPrivilege(select.getValue())"></app-chr-search-select>
+      <app-chr-button [display]="'Ajouter'" [click]="addPrivilege.bind(null, select.getValue())" [color]="'accent'"
+        [type]="'fixed'">
+      </app-chr-button>
+    </div>
+  </div>
+</div>
+<div class="sm:h-[42%]">
+  <app-chr-table [data]="$any(role)?.privileges || []" [columns]="[
+      {
+        display: 'Privilège',
+        properties: ['name']
+      }
+    ]" [actions]="[
+      {
+        display: 'Supprimer',
+        color: 'warn',
+        callback: removePrivilege,
+        disabled: is_locked
+      }
+    ]"></app-chr-table>
+</div>
+<div class="py-4">
+  <hr class="" />
+</div>
+<div class="flex flex-row-reverse justify-between">
+  <app-chr-button *ngIf="!is_locked" [display]="'Valider'" [click]="put" [color]="'primary'" [type]="'fixed'">
+  </app-chr-button>
+  <app-chr-button *ngIf="is_locked" [display]="'Modifier'" [click]="toggleLock" [color]="'accent'" [type]="'fixed'">
+  </app-chr-button>
+  <app-chr-button *ngIf="!is_locked" [display]="'Annuler'" [click]="toggleLock" [color]="'warn'" [type]="'fixed'">
+  </app-chr-button>
+</div>

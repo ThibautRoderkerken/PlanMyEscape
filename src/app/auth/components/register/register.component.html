@@ -1,0 +1,61 @@
+<div class="flex justify-center min-h-5/6">
+  <div class="pt-10 w-4/6">
+    <mat-card-title class="pb-10 text-center">Inscription</mat-card-title>
+    <mat-card-content class="pt-4 w-full">
+      <app-chr-form class="w-full"
+        [(valid)]="valid"
+        [(model)]="registerDTO"
+        (keyup.enter)="register(registerDTO)"
+        [sections]="[
+          {
+            controls: [
+              {
+                label: 'Email',
+                type: 'text',
+                name: 'email',
+                width: 'row',
+                validations: [{ rule: 'required' }, {rule: 'email'}]
+              },
+              {
+                label: 'Nom',
+                type: 'text',
+                name: 'firstname',
+                validations: [{ rule: 'required' }, {rule: 'maxlength', value:100}]
+              },
+              {
+                label: 'Prénom',
+                type: 'text',
+                name: 'lastname',
+                validations: [{ rule: 'required' }, {rule: 'maxlength', value:100}]
+              },
+              {
+                label: 'Mot de passe',
+                type: 'password',
+                name: 'password',
+                validations: [{ rule: 'required' }]
+              },
+              {
+                label: 'Répéter le mot de passe',
+                type: 'password',
+                name: 'repeatPassword',
+                validations: [
+                  { rule: 'required' },
+                  { rule: 'sameAs', value: 'password'}
+                ]
+              }
+            ]
+          }
+        ]"></app-chr-form>
+        <div class="flex flex-row items-center justify-between">
+          <asl-google-signin-button class="mr-5" type='standard' size='medium'></asl-google-signin-button>
+          <app-chr-button
+            display="S'enregistrer"
+            color="primary"
+            [disabled]="!valid"
+            [click]="register">
+          </app-chr-button>
+        </div>
+
+    </mat-card-content>
+  </div>
+</div>

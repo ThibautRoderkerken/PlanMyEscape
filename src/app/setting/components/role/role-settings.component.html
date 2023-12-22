@@ -1,0 +1,78 @@
+<div class="dark:bg-slate-800 dark:text-gray-400">
+  <mat-card class="dark:bg-slate-800 dark:text-gray-400">
+    <mat-card-header class="flex flex-col mb-2">
+      <h2 class="font-bold">Roles</h2>
+      <span class="text-xs">Plus le niveau est bas, plus le rôle est classé haut dans la
+        hiérarchie</span>
+      <span class="text-xs">Le préfixe "ROLE_" sera ajouté automatiquement</span>
+    </mat-card-header>
+    <mat-card-subtitle> </mat-card-subtitle>
+    <mat-card-content>
+      <div class="max-h-[450px] flex flex-col flex-1 overflow-auto no-scrollbar">
+        <table
+          class="table-auto border dark:border-none relative flex flex-row flex-no-wrap w-full rounded-lg sm:shadow-lg mb-5 dark:bg-slate-600 no-scrollbar">
+          <thead class="text-black dark:text-gray-400 sm:sticky sm:top-0 sm:z-10">
+            <tr>
+              <th class="p-3 h-11 text-left">Role</th>
+              <th class="p-3 h-11 text-center">Niveau</th>
+              <th *ngIf="auth.hasPrivilege('ROLE_DETAILS')" class="p-3 h-11 text-center"
+                [ngClass]="!is_locked && auth.hasPrivilege('ROLE_DELETE') ? 'w-80' : 'w-36'">Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="flex-none">
+            <tr *ngFor="let role of roles" class="table-row dark:bg-slate-600 dark:text-gray-400">
+              <td class="p-3 h-11 text-left">{{ role.name }}</td>
+              <td class="p-3 h-16 text-center">
+                <p *ngIf="is_locked">{{ role.authorityLevel }}</p>
+                <input *ngIf="!is_locked" name="level" type="number" step="1" min="1" [(ngModel)]="role.authorityLevel"
+                  class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+              </td>
+              <td *ngIf="auth.hasPrivilege('ROLE_DETAILS')" class="p-3 h-16 text-center flex flex-row justify-between">
+                <app-chr-button color="accent" display="Détails" type="fixed"
+                  [click]="router.navigateToRoleDetails.bind(null, role)"></app-chr-button>
+                <app-chr-button *ngIf="!is_locked && auth.hasPrivilege('ROLE_DELETE')" type="fixed" display="Supprimer"
+                  color="warn" matTooltip="Attention: cette action est irréversible !" matTooltipPosition="above"
+                  [click]="openDeleteDialog.bind(null, role)"></app-chr-button>
+              </td>
+            </tr>
+            <tr class="h-20 dark:bg-slate-600 dark:text-gray-400" *ngIf="!is_locked" [formGroup]="form">
+              <td class="p-3 h-20">
+                <div>
+                  <input [ngClass]="
+                    form.hasError('required', 'name') ||
+                    form.hasError('minlength', 'name')
+                      ? 'bg-red-200'
+                      : ''
+                  " matInput formControlName="name" name="name" type="text" (keyup.enter)="addRole()"
+                    class="text-left bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                </div>
+              </td>
+              <td class="p-3 h-20">
+                <div>
+                  <input [ngClass]="
+                    form.hasError('required', 'level') ||
+                    form.hasError('min', 'level')
+                      ? 'bg-red-200'
+                      : ''
+                  " formControlName="level" name="level" type="number" step="1" min="1" value="0"
+                    (keyup.enter)="addRole()"
+                    class="text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                </div>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card-content>
+    <mat-card-actions class="mt-2 flex flex-row-reverse justify-between" *ngIf="auth.hasPrivilege('ROLE_UPDATE')">
+      <app-chr-button *ngIf="!is_locked" [display]="'Valider'" [click]="put" [color]="'primary'" [type]="'fixed'">
+      </app-chr-button>
+      <app-chr-button *ngIf="is_locked" [display]="'Modifier'" [click]="toggleLock" [color]="'accent'" [type]="'fixed'">
+      </app-chr-button>
+      <app-chr-button *ngIf="!is_locked" [display]="'Annuler'" [click]="toggleLock" [color]="'warn'" [type]="'fixed'">
+      </app-chr-button>
+    </mat-card-actions>
+  </mat-card>
+</div>

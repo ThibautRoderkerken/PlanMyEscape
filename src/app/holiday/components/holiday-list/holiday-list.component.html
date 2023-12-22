@@ -1,0 +1,66 @@
+<div class="grid grid-cols-2 sm:grid-cols-5 gap-6 justify-between pt-5 items-center content-center align-middle mb-7">
+  <div>
+    <div>
+      <label>Filtrer par organisateur: </label>
+      <div class="flex flex-row items-center content-center align-middle">
+        <app-chr-search-select class="w-full" [formControl]="filterBy" placeholder="Chercher un utilisateur"
+          [data]="users" [display]="userService.displayEmail"></app-chr-search-select>
+        <button (click)="resetFilter()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="sm:col-span-2">
+    <label>Chercher: </label>
+    <input matInput [formControl]="searchBy" name="search" placeholder="Rechercher" type="text" id="search"
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+  </div>
+  <div class="grid grid-cols-1 flex-1 self-end content-end items-center justify-center">
+    <a *ngIf="auth.hasPrivilege('HOLIDAY_CREATE')" mat-button mat-flat-button color="primary"
+      (click)="goToHolidayCreation()">Ajouter</a>
+  </div>
+  <div class="grid grid-cols-1 flex-1 self-end content-end items-center justify-center">
+    <app-chr-button  
+    display="Calendrier (.ics)" 
+    color="accent"
+    [click]="downloadCalendar" 
+    >
+    </app-chr-button>
+  </div>
+</div>
+<div class="sm:h-[85%]">
+  <app-chr-table [(isAsc)]="isAsc" [(sortBy)]="sortBy" [data]="
+      dataSource.data
+        | filter : filterBy.value?.['id'] : ['owner', 'id']
+        | filter : filterBy2.value! : ['isPublished']
+        | sort : isAsc : sortBy!
+        | search : searchBy.value!
+    " [columns]="[
+      {
+        display: 'ID',
+        properties: ['id'],
+      },
+      {
+        display: 'Nom',
+        properties: ['name'],
+      },
+      {
+        display: 'Destination',
+        properties: ['country'],
+      },
+      {display: 'Début', properties: ['startAt'], date: 'dd/MM/yyyy' },
+      {display: 'Fin', properties: ['endAt'], date: 'dd/MM/yyyy' },
+      {
+        display: 'Organisateur',
+        properties: ['owner'],
+        callback: userService.display
+      }
+    ]" [actions]="[
+      {
+        display: 'Détails',
+        callback: router.navigateToHolidayDetails,
+        color: 'accent'
+      }
+    ]"></app-chr-table>
+</div>

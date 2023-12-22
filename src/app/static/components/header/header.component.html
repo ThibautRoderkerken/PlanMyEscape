@@ -1,0 +1,208 @@
+<div class="flex space-x-2">
+  <div class="dark:bg-slate-800">
+    <div
+      class="offcanvas offcanvas-start fixed bottom-0 flex flex-col max-w-full bg-white dark:bg-slate-800 invisible bg-clip-padding shadow-sm outline-none transition duration-300 ease-in-out text-gray-700 top-0 left-0 border-none w-52"
+      tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+      <div class="flex items-center justify-between p-4">
+        <mat-toolbar class="flex flex-row justify-between dark:bg-slate-800">
+          <button (click)="goToDashboard()"
+            class="text-black cursor-pointer dark:bg-slate-800 dark:text-gray-400" data-bs-dismiss="offcanvas"
+            aria-label="Close">
+            Menu
+          </button>
+          <button type="button"
+            class="btn-close box-content w-4 h-4 p-2 -my-5 -mr-2 text-black dark:text-gray-400 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+            data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </mat-toolbar>
+      </div>
+      <div class="offcanvas-body flex-grow p-4 overflow-y-auto">
+        <div class="dropdown relative mt-4">
+          <mat-nav-list class="dark:text-gray-400">
+            <div *ngIf="!auth.hasPrivilege('HELPREQUEST_LIST')"
+              class="flex flex-row align-middle items-center text-left dark:text-gray-400">
+              <mat-icon>fingerprint</mat-icon>
+              <a class="dark:text-gray-400 p-3" (click)="goToHelpRequestCreation()" data-bs-dismiss="offcanvas">Support</a>
+            </div>
+          <div *ngIf="auth.hasPrivilege('HELPREQUEST_LIST')"
+            class="flex flex-row align-middle items-center text-left dark:text-gray-400">
+            <mat-icon>fingerprint</mat-icon>
+            <a class="dark:text-gray-400 p-3" (click)="goToHelpRequest()" data-bs-dismiss="offcanvas">Demandes</a>
+          </div>
+            <div *ngIf="!auth.isLoggedIn()"
+              class="flex flex-row align-middle items-center text-left dark:text-gray-400">
+              <mat-icon>fingerprint</mat-icon>
+              <a class="dark:text-gray-400 p-3" (click)="goToLogin()" data-bs-dismiss="offcanvas">Se connecter</a>
+            </div>
+            <div *ngIf="!auth.isLoggedIn()"
+              class="flex flex-row align-middle items-center text-left dark:text-gray-400">
+              <mat-icon>fingerprint</mat-icon>
+              <a class="dark:text-gray-400 p-3" (click)="goToRegister()" data-bs-dismiss="offcanvas">S'enregistrer</a>
+            </div>
+            <div *ngIf="auth.isLoggedIn()">
+              <div *ngIf="auth.hasPrivilege('USER_LIST') && auth.hasRole('ADMIN')" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>supervised_user_circle</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToUser()" data-bs-dismiss="offcanvas">Utilisateurs</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('HOLIDAY_LIST')" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>supervised_user_circle</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToHoliday()" data-bs-dismiss="offcanvas">Vacances</a>
+              </div>
+              <div class="flex flex-row align-middle items-center text-left">
+                <mat-icon>supervised_user_circle</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToChats()" data-bs-dismiss="offcanvas">Chats</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('UNIT_LIST')" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>local_hospital</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToUnit()" data-bs-dismiss="offcanvas">Sites</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('ITEM_LIST')" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>computer</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToItem()" data-bs-dismiss="offcanvas">Matériel</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('LICENCE_LIST')" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>system_update</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToLicence()" data-bs-dismiss="offcanvas">Licences</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('OPERATION_LIST')"
+                class="flex flex-row align-middle items-center text-left">
+                <mat-icon>new_releases</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToIntervention()"
+                  data-bs-dismiss="offcanvas">Opérations</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('ORDER_LIST')" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>bookmark</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToOrder()" data-bs-dismiss="offcanvas">Commandes</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('STATISTIC_LIST')"
+                class="flex flex-row align-middle items-center text-left">
+                <mat-icon>insert_chart</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToStat()" data-bs-dismiss="offcanvas">Statistiques</a>
+              </div>
+              <div *ngIf="auth.hasPrivilege('SETTING_LIST')" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>settings</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToSettings()" data-bs-dismiss="offcanvas">Paramètres</a>
+              </div>
+              <div *ngIf="auth.isLoggedIn()" class="flex flex-row align-middle items-center text-left">
+                <mat-icon>exit_to_app</mat-icon>
+                <a class="dark:text-gray-400 p-3" (click)="goToLogout()" data-bs-dismiss="offcanvas">Déconnexion</a>
+              </div>
+            </div>
+          </mat-nav-list>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<mat-sidenav-container class="sidenav-container !z-50 h-screen">
+  <mat-sidenav-content class="dark:bg-slate-800 dark:!text-gray-400 !z-50 h-full">
+    <mat-toolbar color="primary" class="flex flex-row justify-between overflow-hidden !z-50">
+      <div class="flex flex-row justify-center items-center">
+        <div class="flex xmd:hidden">
+          <button type="button" aria-label="Toggle sidenav" mat-icon-button type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+          </button>
+        </div>
+        <button (click)="goToDashboard()" class="text-white">
+          PlanMyEscape | {{ auth.getUsername() }}
+        </button>
+      </div>
+      <div class="justify-between invisible xmd:visible">
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('USER_LIST') && auth.hasRole('ADMIN')" (click)="goToUser()" mat-flat-button
+            color="primary">Utilisateurs</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('HOLIDAY_LIST')" (click)="goToHoliday()" mat-flat-button
+            color="primary">Vacances</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a (click)="goToChats()" mat-flat-button
+            color="primary">Chats</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('UNIT_LIST')" (click)="goToUnit()" mat-flat-button color="primary">Sites</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('ITEM_LIST')" (click)="goToItem()" mat-flat-button color="primary">Matériel</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('LICENCE_LIST')" (click)="goToLicence()" mat-flat-button
+            color="primary">Licences</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('OPERATION_LIST')" (click)="goToIntervention()" mat-flat-button
+            color="primary">Opérations</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('ORDER_LIST')" (click)="goToOrder()" mat-flat-button color="primary">Commandes</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('STATISTIC_LIST')" (click)="goToStat()" mat-flat-button
+            color="primary">Statistiques</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          <a *ngIf="auth.hasPrivilege('HELPREQUEST_LIST')" (click)="goToHelpRequest()" mat-flat-button
+            color="primary">Demandes</a>
+        </span>
+        <span *ngIf="!auth.isLoggedIn()" class="">
+          <a (click)="goToLogin()" mat-flat-button color="primary">Se connecter</a>
+        </span>
+        <span *ngIf="!auth.isLoggedIn()" class="">
+          <a (click)="goToRegister()" mat-flat-button color="primary">S'enregistrer</a>
+        </span>
+        <span class="" *ngIf="!auth.hasPrivilege('HELPREQUEST_LIST')">
+          <a (click)="goToHelpRequestCreation()" mat-flat-button color="primary">Support</a>
+        </span>
+        <span *ngIf="auth.isLoggedIn()" class="">
+          |
+          <a (click)="goToLogout()" mat-flat-button color="primary">Déconnexion</a>
+          <a *ngIf="auth.hasPrivilege('SETTING_LIST')" mat-flat-button color="primary"
+            (click)="goToSettings()"><mat-icon>settings</mat-icon></a>
+        </span>
+      </div>
+    </mat-toolbar>
+    <div [ngClass]="
+        certificates.length < 1 && successes.length < 1 && errors.length < 1
+          ? 'visually-hidden'
+          : ''
+      " class="flex flex-row h-0 items-center justify-center toast top-16">
+      <div *ngIf="auth.hasRole('ADM') && certificates.length > 0"
+        class="toast toast-container w-full transition-[width] ease-in-out">
+        <div *ngFor="let certificate of certificates"
+          class="w-full z-4 bg-orange-400 text-white text-center font-bold rounded-2xl mt-5 p-2">
+          Le certificat '{{ certificate.name }}' arrive à expiration
+        </div>
+      </div>
+      <div *ngIf="successes[0] && successTimeout() as success"
+        class="toast toast-container w-full transition-[width] ease-in-out">
+        <div [@fadeInOut]="success ? 'shown' : 'hidden'"
+          class="w-full z-4 success text-white text-center font-bold rounded-2xl mt-5 p-2">
+          {{ success.message }}
+        </div>
+      </div>
+      <div *ngIf="warnings[0] && warningTimeout() as warning"
+        class="toast toast-container w-full transition-[width] ease-in-out">
+        <div [@fadeInOut]="warning ? 'shown' : 'hidden'"
+          class="w-full z-4 bg-orange-400 text-white text-center font-bold rounded-2xl mt-5 p-2">
+          {{ warning.message }}
+        </div>
+      </div>
+      <div *ngIf="errors[0] && errorTimeout() as error"
+        class="toast toast-container w-full transition-[width] ease-in-out">
+        <div [@fadeInOut]="error ? 'shown' : 'hidden'"
+          class="w-full z-4 error text-white text-center font-bold rounded-2xl mt-5 p-2">
+          {{ error.message }}
+        </div>
+      </div>
+    </div>
+    <div class="flex h-[93%] justify-center">
+      <div class="w-full h-full xmd:w-5/6 dark:bg-slate-800 p-3 rounded-lg">
+        <div class="align-middle h-full">
+          <app-spinner></app-spinner>
+          <router-outlet class="h-full"></router-outlet>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

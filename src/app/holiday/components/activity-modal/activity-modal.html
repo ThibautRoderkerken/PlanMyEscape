@@ -1,0 +1,27 @@
+<div class="dark:bg-slate-800 w-full">
+  <h2 mat-dialog-title class="dark:!text-gray-400">Détails de l'activité</h2>
+  <mat-dialog-content>
+    <app-chr-form [(valid)]="valid" [(model)]="activity" [sections]="[
+        {controls: [
+          {label:'Nom', type:'text', name:'name', placeholder:'Nom de l\'activité', validations: [{rule:'required'}, {rule:'maxlength', value:'50'}]},
+          {label:'Destination', type:'text', name:'destination', placeholder:'Destination de l\'activité', validations: [{rule:'required'}, {rule: 'maxlength', value:100}]},
+        ]},
+        {controls: [
+          {label:'Description', type:'textArea', name:'description', placeholder:'Description plus précise de l\'activité', span:'Description complète de l\'activité, en un maximum de 500 caractères.', width:'row', validations: [{rule:'required'}, {rule: 'maxlength', value:500}]},
+        ]},
+        {controls: [
+          {label:'Date de début', type:'datetime', name:'startAt', validations: [{rule:'required'}, {rule: 'afterdate', value: holiday.startAt}]},
+          {label:'Date de fin', type:'datetime', name:'endAt', validations: [{rule:'required'}, {rule: 'beforedate', value: holiday.endAt}]},
+        ]},
+        ]"></app-chr-form>
+  </mat-dialog-content>
+  <div class="py-4">
+    <hr class="" />
+  </div>
+  <mat-dialog-actions>
+    <div class="w-full flex flex-row justify-between">
+      <app-chr-button display="Annuler" color="warn" mat-dialog-close></app-chr-button>
+      <app-chr-button [disabled]="!valid" display="Valider" color="accent" [click]="close"></app-chr-button>
+    </div>
+  </mat-dialog-actions>
+</div>

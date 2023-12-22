@@ -1,0 +1,22 @@
+<div>
+  <div class="grid grid-cols-2 sm:grid-cols-5 gap-6 justify-between pt-5 items-center content-center align-middle">
+    <h2 class="col-span-3">Nombre d'utilisateurs en vacances</h2>
+  </div>
+  <app-chr-form #form class="no-calendar-icon"
+  [(model)]="state"
+  [sections]="[{controls: [
+    {
+      label: 'Date', 
+      type: 'date', 
+      name: 'date', 
+      width: 'row',
+      icon: 'check',
+      iconCallback: update,
+      iconCallbackDisabled: !form.isValid('date'),
+      iconTooltip:'Cliquez ici pour actualiser le graphique !'
+    }
+  ]}]"
+  >
+  </app-chr-form>
+  <canvas #userholiday id="userholiday">{{ userHolidayChart }}</canvas>
+</div>

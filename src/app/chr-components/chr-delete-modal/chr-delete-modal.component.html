@@ -1,0 +1,26 @@
+<div class="dark:bg-slate-800">
+    <h2 mat-dialog-title class="dark:!text-gray-400">Supprimer un élément</h2>
+    <mat-dialog-content class="dark:!text-gray-400">
+        Attention:
+        <hr>
+        <br>
+        La suppression d'un élément est irréversible.
+        <hr>
+        <br>
+        Vous allez supprimer un élément et sa référence sera effacée dans toute l'application.
+        <hr>
+        Si d'autres éléments y sont liés, il est possible qu'ils soient supprimés en même temps.
+        <hr>
+        <br>
+        En effectuant cette action et cliquant sur "Confirmer" vous certifiez que vous avez pris connaissance des
+        conséquences possibles et souhaitez tout de même poursuivre.
+
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <div class="w-full flex flex-row justify-between">
+            <app-chr-button class="w-36" display="Annuler" color="accent" mat-dialog-close></app-chr-button>
+            <app-chr-button class="w-36" display="Confirmer" color="warn" [click]="close"
+                [matTooltip]="'Attention: cette action est irréversible !'" matTooltipPosition="above"></app-chr-button>
+        </div>
+    </mat-dialog-actions>
+</div>

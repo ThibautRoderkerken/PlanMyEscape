@@ -1,0 +1,12 @@
+<div class="w-full flex flex-row flex-wrap dark:!text-gray-400">
+  <div *ngFor="let crumb of crumbs" class="w-fit min-w-fit">
+    <button
+      class="dark:!text-gray-400"
+      [disabled]="!crumb.link && !crumb.callback"
+      mat-button
+      (click)="crumb.callback?.() || crumb.link && router.navigateTo(crumb.link)">
+      {{ crumb.display }}
+    </button>
+    {{ (crumb.link || crumb.callback) && ">" }}
+  </div>
+</div>

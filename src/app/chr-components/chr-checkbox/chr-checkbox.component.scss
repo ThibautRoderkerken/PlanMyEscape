@@ -1,0 +1,15 @@
+@use 'sass:map';
+@use '@angular/material' as mat;
+@import '../../../styles.scss';
+
+$color-config:    mat.get-color-config($chr-theme);
+$primary-palette: map.get($color-config, 'primary');
+$accent-palette: map.get($color-config, 'accent');
+
+.bg-accent {
+  background-color: mat.get-color-from-palette($accent-palette, A200);
+}
+
+.info {
+    background-color: mat.get-color-from-palette($accent-palette, A200);
+}

@@ -1,0 +1,20 @@
+<div class="dark:bg-slate-800 w-96">
+    <h2 mat-dialog-title class="dark:!text-gray-400">Confirmer une action</h2>
+    <mat-dialog-content class="dark:!text-gray-400">
+        Attention:
+        <hr>
+        <br>
+        Cette opération est irréversible.
+        <hr>
+        <br>
+        Êtes-vous sûr de vouloir faire ça ?
+
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <div class="w-full flex flex-row justify-between">
+            <app-chr-button class="w-36" display="Annuler" color="accent" mat-dialog-close></app-chr-button>
+            <app-chr-button class="w-36" display="Confirmer" color="warn" [click]="close"
+                [matTooltip]="'Attention: cette action est irréversible !'" matTooltipPosition="above"></app-chr-button>
+        </div>
+    </mat-dialog-actions>
+</div>

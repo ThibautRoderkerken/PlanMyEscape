@@ -1,0 +1,4 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6 justify-between content-center sm:my-5">
+  <app-role-settings *ngIf="auth.hasPrivilege('SETTING_ROLE_DETAILS')"
+    class="h-min w-full sm:min-w-fit"></app-role-settings>
+</div>
